@@ -18,9 +18,7 @@ public class ProcessMainClass {
             serviceIntent = new Intent(context, MyService.class);
         }
     }
-    /**
-     * launching the service
-     */
+
     public void launchService(Context context) {
         if (context == null) {
             return;

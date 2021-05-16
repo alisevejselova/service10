@@ -1,7 +1,10 @@
 package com.example.service10;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
@@ -15,10 +18,10 @@ import java.util.TimerTask;
 
 public class MyService extends Service {
 
-    protected static final int NOTIFICATION_ID = 1337;
-    private static String TAG = "Service";
+    protected static final int NOTIFICATION_ID = 1335;
+    private static String TAG = "MyService";
     private static MyService mCurrentService;
-    private int counter = 0;
+
 
     public MyService() {
         super();
@@ -38,7 +41,7 @@ public class MyService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         Log.d(TAG, "restarting Service !!");
-        counter = 0;
+
 
         // it has been killed by Android and now it is restarted. We must make sure to have reinitialised everything
         if (intent == null) {
@@ -51,13 +54,34 @@ public class MyService extends Service {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             restartForeground();
         }
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-        startTimer();
-
-        // return start sticky so if it is killed by android, it will be restarted with Intent null
-        return START_STICKY;
+        try{
+            if(networkInfo != null && networkInfo.isConnected())
+            {
+                //startTask();
+                startTimer();
+            }
+            else
+            {
+                Log.d(TAG, "No internet connection!");
+            }
+         }
+        catch (Exception e){
+        e.printStackTrace();
     }
 
+      // return start sticky so if it is killed by android, it will be restarted with Intent null
+        return START_STICKY;
+    }
+    private void startTask() {
+
+        Timer timer = new Timer();
+        initializeTimerTask();
+      //  timer.schedule(timertask,1000,600000);
+        // period 10 min
+    }
 
     @Nullable
     @Override
@@ -81,7 +105,7 @@ public class MyService extends Service {
                 Notification notification = new Notification();
                 startForeground(NOTIFICATION_ID, notification.setNotification(this, "Service notification", "This is the service's notification", R.drawable.ic_sleep));
                 Log.i(TAG, "restarting foreground successful");
-                startTimer();
+                startTask();
             } catch (Exception e) {
                 Log.e(TAG, "Error in notification " + e.getMessage());
             }
@@ -96,7 +120,8 @@ public class MyService extends Service {
         // restart the never ending service
         Intent broadcastIntent = new Intent(Globals.RESTART_INTENT);
         sendBroadcast(broadcastIntent);
-        stoptimertask();
+        //startTask();
+        startTimer();
     }
 
 
@@ -119,14 +144,8 @@ public class MyService extends Service {
         // stoptimertask();
     }
 
-
-    /**
-     * static to avoid multiple timers to be created when the service is called several times
-     */
     private static Timer timer;
     private static TimerTask timerTask;
-    long oldTime = 0;
-
     public void startTimer() {
         Log.i(TAG, "Starting timer");
 
@@ -134,43 +153,29 @@ public class MyService extends Service {
         stoptimertask();
         timer = new Timer();
 
-        //initialize the TimerTask's job
         initializeTimerTask();
 
         Log.i(TAG, "Scheduling...");
-        //schedule the timer, to wake up every 1 second
-        timer.schedule(timerTask, 1000, 1000); //
+        timer.schedule(timerTask,1000, 600000 ); // 10 min = 600 000ms
     }
 
-    /**
-     * it sets the timer to print the counter every x seconds
-     */
+
     public void initializeTimerTask() {
         Log.i(TAG, "initialising TimerTask");
         timerTask = new TimerTask() {
             public void run() {
-                Log.i("in timer", "in timer ++++  " + (counter++));
+                new GetJobs().execute();
             }
         };
     }
 
-    /**
-     * not needed
-     */
+
     public void stoptimertask() {
-        //stop the timer, if it's not already null
+
         if (timer != null) {
             timer.cancel();
             timer = null;
         }
-    }
-
-    public static MyService getmCurrentService() {
-        return mCurrentService;
-    }
-
-    public static void setmCurrentService(MyService mCurrentService) {
-        MyService.mCurrentService=mCurrentService;
     }
 
 }
