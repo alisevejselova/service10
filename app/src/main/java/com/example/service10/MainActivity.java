@@ -19,18 +19,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
         Log.i("MainActivity","onCreate");
-//        if (isNetworkAvailable()){
-//            Log.d(TAG, "network available");
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-//                RestartServiceBroadcastReceiver.scheduleJob(getApplicationContext());
-//            } else {
-//                ProcessMainClass bck = new ProcessMainClass();
-//                bck.launchService(getApplicationContext());
-//            }
-//
-//        } else{
-//            Log.d(TAG, "-----------------No internet connection--------------");
-//        }
+
     }
     @Override
     protected void onResume() {
@@ -47,11 +36,4 @@ public class MainActivity extends Activity {
        finish();
     }
 
-
-//    private boolean isNetworkAvailable() {
-//        ConnectivityManager connectivityManager
-//                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-//        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-//        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-//    }
 }

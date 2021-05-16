@@ -25,18 +25,7 @@ public class ServiceRestartBroadcastReceiver extends BroadcastReceiver {
     private static JobScheduler jobScheduler;
     private ServiceRestartBroadcastReceiver restartSensorServiceReceiver;
 
-//    public static long getVersionCode(Context context) {
-//        PackageInfo pInfo;
-//        try {
-//            pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-//            long versionCode = System.currentTimeMillis();  //PackageInfoCompat.getLongVersionCode(pInfo);
-//            return versionCode;
-//
-//        } catch (Exception e) {
-//            Log.e(TAG, e.getMessage());
-//        }
-//        return 0;
-//    }
+
     @Override
     public void onReceive(final Context context, Intent intent) {
         Log.d(TAG, "about to start timer " + context.toString());
@@ -66,12 +55,6 @@ public class ServiceRestartBroadcastReceiver extends BroadcastReceiver {
     }
 
 
-//    public static void reStartTracker(Context context) {
-//        // restart the never ending service
-//        Log.i(TAG, "Restarting tracker");
-//        Intent broadcastIntent = new Intent(Globals.RESTART_INTENT);
-//        context.sendBroadcast(broadcastIntent);
-//    }
 
 
     private void registerRestarterReceiver(final Context context) {
