@@ -22,7 +22,6 @@ public class MyService extends Service {
     private static String TAG = "MyService";
     private static MyService mCurrentService;
 
-
     public MyService() {
         super();
     }
@@ -60,7 +59,6 @@ public class MyService extends Service {
         try{
             if(networkInfo != null && networkInfo.isConnected())
             {
-                //startTask();
                 startTimer();
             }
             else
@@ -75,13 +73,7 @@ public class MyService extends Service {
       // return start sticky so if it is killed by android, it will be restarted with Intent null
         return START_STICKY;
     }
-    private void startTask() {
 
-        Timer timer = new Timer();
-        initializeTimerTask();
-      //  timer.schedule(timertask,1000,600000);
-        // period 10 min
-    }
 
     @Nullable
     @Override
@@ -105,7 +97,7 @@ public class MyService extends Service {
                 Notification notification = new Notification();
                 startForeground(NOTIFICATION_ID, notification.setNotification(this, "Service notification", "This is the service's notification", R.drawable.ic_sleep));
                 Log.i(TAG, "restarting foreground successful");
-                startTask();
+                startTimer();
             } catch (Exception e) {
                 Log.e(TAG, "Error in notification " + e.getMessage());
             }
@@ -120,7 +112,6 @@ public class MyService extends Service {
         // restart the never ending service
         Intent broadcastIntent = new Intent(Globals.RESTART_INTENT);
         sendBroadcast(broadcastIntent);
-        //startTask();
         startTimer();
     }
 
@@ -146,6 +137,7 @@ public class MyService extends Service {
 
     private static Timer timer;
     private static TimerTask timerTask;
+
     public void startTimer() {
         Log.i(TAG, "Starting timer");
 
@@ -156,7 +148,7 @@ public class MyService extends Service {
         initializeTimerTask();
 
         Log.i(TAG, "Scheduling...");
-        timer.schedule(timerTask,1000, 600000 ); // 10 min = 600 000ms
+        timer.schedule(timerTask,1000, 30000 ); // 10 min = 600 000ms
     }
 
 
@@ -164,7 +156,8 @@ public class MyService extends Service {
         Log.i(TAG, "initialising TimerTask");
         timerTask = new TimerTask() {
             public void run() {
-                new GetJobs().execute();
+                new GetJobs(getApplicationContext()).execute();
+
             }
         };
     }

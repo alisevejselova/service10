@@ -21,7 +21,8 @@ public class Network {
         try{
 
             Log.d(TAG,"Connecting .... ");
-            Uri builtUri = Uri.parse("http://10.0.2.2:5000/getjobs")
+            Uri builtUri = Uri.parse("http://10.0.2.2:5000/getjobs/emulator")
+           // Uri builtUri = Uri.parse("http://192.168.1.4:5000/getjobs/hardware")
                     .buildUpon()
                     .build();
 
@@ -66,7 +67,7 @@ public class Network {
         }
         Log.d(TAG, "get json data from backend");
 
-        Log.d(TAG, "DATA : " + JSONString );
+        Log.d("Json Job ", "JSON DATA : " + JSONString );
 
         return JSONString;
     }
